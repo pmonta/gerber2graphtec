@@ -1,0 +1,84 @@
+#!/usr/bin/python
+
+#
+# gerber2graphtec
+#
+# Cut fine-pitch SMT stencils from a gerber file using a Graphtec craft/vinyl cutter (e.g. Silhouette Cameo)
+#
+# Copyright (c) 2012 Peter Monta <pmonta@gmail.com>
+#
+
+import sys
+import os
+import string
+
+#
+# parse arguments
+#
+
+offset = (1,1)
+matrix = (1,0,0,1)
+speed = [2]
+force = [12]
+input_filename = ''
+
+def floats(s):
+  return map(float,string.split(s,','))
+
+argc = 1
+while argc<len(sys.argv):
+  x = sys.argv[argc]
+  if x=='--offset':
+    offset = floats(sys.argv[argc+1])
+    argc = argc + 2
+  elif x=='--matrix':
+    matrix = floats(sys.argv[argc+1])
+    argc = argc + 2
+  elif x=='--speed':
+    speed = floats(sys.argv[argc+1])
+    argc = argc + 2
+  elif x=='--force':
+    force = floats(sys.argv[argc+1])
+    argc = argc + 2
+  else:
+    input_filename = sys.argv[argc]
+    argc = argc + 1
+
+if not input_filename:
+  print 'usage: gerber2graphtec --offset x,y --matrix a,b,c,d --speed s[,s2,s3] --force f[,f2,f3] paste.gbr >/dev/usb/lp0'
+  print '  defaults:  --offset 1,1 --matrix 1,0,0,1 --speed 2 --force 12'
+  print '  all units are in inches; matrix elements are m00,m01,m10,m11 (dimensionless), e.g. 1.0013,0.001,-0.001,0.998'
+  sys.exit(1)
+
+#
+# convert file to pic format
+#
+
+temp_pdf = "/tmp/_gerber.pdf"
+temp_pic = "/tmp/_gerber.pic"
+
+os.system("gerbv --export=pdf --output=%s --border=0 %s" % (temp_pdf,input_filename))
+os.system("pstoedit -f pic %s %s 2>/dev/null" % (temp_pdf,temp_pic))
+
+#
+# main program
+#
+
+import graphtec
+import pic
+import optimize
+
+g = graphtec.graphtec()
+
+g.start()
+
+g.set(offset=offset, matrix=matrix)
+strokes = pic.read_pic(temp_pic)
+strokes = optimize.optimize(strokes)
+
+for (s,f) in zip(speed,force):
+  g.set(speed=s, force=f)
+  for x in strokes:
+    g.path(x)
+
+g.end()
