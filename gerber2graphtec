@@ -16,7 +16,7 @@ import string
 # parse arguments
 #
 
-offset = (1,1)
+offset = (4.5,1)
 matrix = (1,0,0,1)
 speed = [2]
 force = [12]
@@ -74,11 +74,11 @@ g.start()
 
 g.set(offset=offset, matrix=matrix)
 strokes = pic.read_pic(temp_pic)
-strokes = optimize.optimize(strokes)
+lines = optimize.optimize(strokes)
 
 for (s,f) in zip(speed,force):
   g.set(speed=s, force=f)
-  for x in strokes:
-    g.path(x)
+  for x in lines:
+    g.line(*x)
 
 g.end()

@@ -3,6 +3,7 @@
 #
 
 import sys
+import math
 
 class graphtec:
   def __init__(self):
@@ -18,7 +19,8 @@ class graphtec:
     papertype = "100"
     trackenhancing = "0"
     orientation = "1"
-    page = ["12x12 cutting mat", 6096, 6096]  # 12x12 cutting mat in device units
+#    page = ["12x12 cutting mat", 6096, 6096]     # 12x12 cutting mat in device units
+    page = ["8.5x11 media, portrait", 4318, 5588] # 8.5x11 media in device units
     margintop = 500                           # margins in device units
     marginright = 320
     self.emit("\x1b\x04")  # initialize plotte
@@ -74,6 +76,23 @@ class graphtec:
     self.move(*s[0])
     for p in s[1:]:
       self.draw(*p)
+
+  def comp(self, x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+    theta = math.atan2(dy,dx)
+    dist_pre = -0.001
+    dist_post = 0.001
+    dx1 = dist_pre*math.cos(theta)
+    dy1 = dist_pre*math.sin(theta)
+    dx2 = dist_post*math.cos(theta)
+    dy2 = dist_post*math.sin(theta)
+    return (dx1,dy1,dx2,dy2)
+
+  def line(self, x1, y1, x2, y2):
+    dx1,dy1,dx2,dy2 = self.comp(x1,y1,x2,y2)
+    self.move(x1+dx1,y1+dy1)
+    self.draw(x2+dx2,y2+dy2)
 
   def set(self, **kwargs):
     for k in kwargs:
