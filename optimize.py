@@ -2,11 +2,19 @@
 
 import math
 
+def max_extent(strokes):
+  max_x,max_y = 0,0
+  for s in strokes:
+    for (a,b) in s:
+      max_x = max([max_x,a])
+      max_y = max([max_y,b])
+  return max_x,max_y
+
 def emit_line(x1,y1,x2,y2):
   global r
   global loc
   loc = (x2,y2)
-  r.append((x1+1.5,y1+1.5,x2+1.5,y2+1.5))
+  r.append((x1,y1,x2,y2))
 
 def angle(x1,y1,x2,y2):
   dx = x2 - x1
@@ -21,14 +29,14 @@ def angle(x1,y1,x2,y2):
 def emit_training_line(ang):
   global r
   global loc
-  cx,cy = 0.5,0.5
+  cx,cy = 0.25,0.25
   theta = ang*math.pi/8
   x = math.cos(theta)
   y = math.sin(theta)
-  x1,y1 = 0.5*x, 0.5*y
-  x2,y2 = 0.2*x, 0.2*y
-  loc = (x2-1,y2-1)
-  r.append((cx+x1,cy+y1,cx+x2,cy+y2))
+  x1,y1 = 0.25*x-border[0]-cx, 0.25*y-border[1]-cy
+  x2,y2 = 0.05*x-border[0]-cx, 0.05*y-border[1]-cy
+  loc = (x2,y2)
+  r.append((x1,y1,x2,y2))
 
 def dice(strokes):
   lines = []
@@ -54,8 +62,11 @@ def find_next(a):
     i = i + 1
   return None
 
-def optimize(strokes):
+def optimize(strokes, b):
+  global border
   global r
+
+  border = b
   r = []
 
   lines = dice(strokes)

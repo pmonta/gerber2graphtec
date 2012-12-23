@@ -16,10 +16,12 @@ import string
 # parse arguments
 #
 
-offset = (4.5,1)
+offset = (4,0.5)
+border = (1,1)
 matrix = (1,0,0,1)
-speed = [2]
-force = [12]
+speed = [2,2]
+force = [8,30]
+cut_mode = 0
 input_filename = ''
 
 def floats(s):
@@ -31,6 +33,9 @@ while argc<len(sys.argv):
   if x=='--offset':
     offset = floats(sys.argv[argc+1])
     argc = argc + 2
+  elif x=='--border':
+    border = floats(sys.argv[argc+1])
+    argc = argc + 2
   elif x=='--matrix':
     matrix = floats(sys.argv[argc+1])
     argc = argc + 2
@@ -40,14 +45,32 @@ while argc<len(sys.argv):
   elif x=='--force':
     force = floats(sys.argv[argc+1])
     argc = argc + 2
+  elif x=='--cut_mode':
+    cut_mode = int(sys.argv[argc+1])
+    argc = argc + 2
   else:
     input_filename = sys.argv[argc]
     argc = argc + 1
 
 if not input_filename:
-  print 'usage: gerber2graphtec --offset x,y --matrix a,b,c,d --speed s[,s2,s3] --force f[,f2,f3] paste.gbr >/dev/usb/lp0'
-  print '  defaults:  --offset 1,1 --matrix 1,0,0,1 --speed 2 --force 12'
-  print '  all units are in inches; matrix elements are m00,m01,m10,m11 (dimensionless), e.g. 1.0013,0.001,-0.001,0.998'
+  print 'usage: gerber2graphtec [options] paste.gbr >/dev/usb/lp0'
+  print ''
+  print 'options:'
+  print '  --offset x,y        translate to device coordinates x,y (inches)'
+  print '  --border bx,by      leave a border around the bounding box of the gerber file'
+  print '  --matrix a,b,c,d    transform coordinates by [a b;c d]'
+  print '  --speed s[,s2[,s3]] use speed s in device units; s2,s3 for multiple passes'
+  print '  --force f[,f2[,f3]] use force f in device units; f2,f3 for multiple passes'
+  print '  --cut_mode [0|1]    0 for highest accuracy (fine pitch), 1 for highest speed'
+  print ''
+  print 'defaults:'
+  print '  --offset 4.0,0.5  suitable for letter size (portrait), fed as "media" not "mat"'
+  print '  --border 1,1      1-inch border in x and y around gerber bounding box'
+  print '  --matrix 1,0,0,1  identity linear transform for scale and skew calibration'
+  print '  --speed 2,2       use two passes, speed 2 in each pass'
+  print '  --force 8,30      use force 8 for first pass, force 30 for second pass'
+  print '  --cut_mode 0      highest accuracy'
+  print ''
   sys.exit(1)
 
 #
@@ -72,13 +95,31 @@ g = graphtec.graphtec()
 
 g.start()
 
-g.set(offset=offset, matrix=matrix)
+g.set(offset=(offset[0]+border[0]+0.5,offset[1]+border[1]+0.5), matrix=matrix)
 strokes = pic.read_pic(temp_pic)
-lines = optimize.optimize(strokes)
+max_x,max_y = optimize.max_extent(strokes)
 
-for (s,f) in zip(speed,force):
-  g.set(speed=s, force=f)
-  for x in lines:
-    g.line(*x)
+tx,ty = 0.5,0.5
+
+border_path = [
+  (-border[0], -border[1]),
+  (max_x+border[0], -border[1]),
+  (max_x+border[0], max_y+border[1]),
+  (-border[0], max_y+border[1])
+]
+
+if cut_mode==0:
+  lines = optimize.optimize(strokes, border)
+  for (s,f) in zip(speed,force):
+    g.set(speed=s, force=f)
+    for x in lines:
+      g.line(*x)
+    g.closed_path(border_path)
+else:
+  for (s,f) in zip(speed,force):
+    g.set(speed=s, force=f)
+    for s in strokes:
+      g.closed_path(s)
+    g.closed_path(border_path)
 
 g.end()

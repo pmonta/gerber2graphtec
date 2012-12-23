@@ -9,7 +9,7 @@ class graphtec:
   def __init__(self):
     self.fd = sys.stdout
     self.scale = 2.54*200
-    self.offset = (1,1)
+    self.offset = (4.0,0.5)
     self.matrix = (1,0,0,1)
 
   def emit(self, s):
@@ -20,7 +20,7 @@ class graphtec:
     trackenhancing = "0"
     orientation = "1"
 #    page = ["12x12 cutting mat", 6096, 6096]     # 12x12 cutting mat in device units
-    page = ["8.5x11 media, portrait", 4318, 5588] # 8.5x11 media in device units
+    page = ["12x11 media", 6096, 5588]            # 12x11 media in device units
     margintop = 500                           # margins in device units
     marginright = 320
     self.emit("\x1b\x04")  # initialize plotte
@@ -59,10 +59,12 @@ class graphtec:
   def move(self, x, y):
     x,y = self.transform(x,y)
     self.emit('M%.3f,%.3f\x03' % (x,y))
+#    sys.stderr.write('move %f %f\n' % (x/self.scale,y/self.scale))
 
   def draw(self, x, y):
     x,y = self.transform(x,y)
     self.emit('D%.3f,%.3f\x03' % (x,y))
+#    sys.stderr.write('draw %f %f\n' % (x/self.scale,y/self.scale))
 
   def closed_path(self, s):
     if len(s)<3:
