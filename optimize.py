@@ -4,10 +4,11 @@ import math
 
 def emit_line(x1,y1,x2,y2):
   global r
+  global loc
+  loc = (x2,y2)
   r.append((x1+1.5,y1+1.5,x2+1.5,y2+1.5))
 
 def angle(x1,y1,x2,y2):
-  import sys
   dx = x2 - x1
   dy = y2 - y1
   theta = math.atan2(dy,dx)
@@ -19,11 +20,15 @@ def angle(x1,y1,x2,y2):
 
 def emit_training_line(ang):
   global r
+  global loc
   cx,cy = 0.5,0.5
   theta = ang*math.pi/8
   x = math.cos(theta)
   y = math.sin(theta)
-  r.append((cx+0.5*x,cy+0.5*y,cx+0.2*x,cy+0.2*y))
+  x1,y1 = 0.5*x, 0.5*y
+  x2,y2 = 0.2*x, 0.2*y
+  loc = (x2-1,y2-1)
+  r.append((cx+x1,cy+y1,cx+x2,cy+y2))
 
 def dice(strokes):
   lines = []
@@ -37,6 +42,18 @@ def dice(strokes):
     lines.append((s[0][0],s[0][1],p[0],p[1]))
   return lines
 
+def find_next(a):
+  global loc
+  lx,ly = loc
+  n = len(a)
+  i = 0
+  while i<n:
+    x1,y1,x2,y2 = a[i]
+    if x1>(lx+0.1) and y1>(ly+0.1):
+      return i
+    i = i + 1
+  return None
+
 def optimize(strokes):
   global r
   r = []
@@ -48,9 +65,17 @@ def optimize(strokes):
     for x in lines:
       if ang==angle(*x):
         a.append(x)
+    if not a:
+      continue
     a.sort(key=lambda s:(s[1],s[0]))
-    for (a,b,c,d) in a:
+    emit_training_line(ang)
+    while a:
+      while True:
+        i = find_next(a)
+        if i==None:
+          break
+        emit_line(*a[i])
+        del a[i]
       emit_training_line(ang)
-      emit_line(a,b,c,d)
 
   return r
