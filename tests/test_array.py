@@ -4,17 +4,17 @@ import random
 import graphtec
 
 def pads1(g):
-  for i in xrange(0,20):
+  for i in range(0,20):
     g.path([(0,0),(0.07,0.07)])
-    for j in xrange(0,20):
+    for j in range(0,20):
       x = 0.1*i
       y = 0.008*j
       g.path([(x,y),(x+0.05,y)])
 
 def pads2(g):
-  for i in xrange(0,20):
+  for i in range(0,20):
     g.path([(0,0),(0.07,0.07)])
-    for j in xrange(0,20):
+    for j in range(0,20):
       x = 0.008*i
       y = 0.4+0.1*j
       g.path([(x,y),(x,y+0.05)])

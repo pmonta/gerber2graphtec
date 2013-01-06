@@ -12,8 +12,8 @@ g.start()
 g.set(offset=offset, matrix=matrix)
 g.set(speed=2)
 
-for i in xrange(0,6):
-  for j in xrange(0,5):
+for i in range(0,6):
+  for j in range(0,5):
     g.set(force=1+j+6*i)
     tx = 0.5*j
     ty = 0.5*i

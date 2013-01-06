@@ -16,12 +16,12 @@ def mark(g,p,theta):
   vx,vy = math.cos(theta),math.sin(theta)
   r = theta + math.pi/2
   rx,ry = math.cos(r),math.sin(r)
-  for i in xrange(-2,18):
+  for i in range(-2,18):
     if i==-1:
       continue
     cx,cy = px+vx*(i-3*17)/17.0, py+vy*(i-3*17)/17.0
     g.line(cx-0.08*rx,cy-0.08*ry,cx+0.08*rx,cy+0.08*ry)
-  for i in xrange(-2,18):
+  for i in range(-2,18):
     if i==-1:
       continue
     cx,cy = px+vx*(i+2*17)/17.0, py+vy*(i+2*17)/17.0

@@ -71,7 +71,7 @@ def optimize(strokes, b):
 
   lines = dice(strokes)
 
-  for ang in xrange(0,16):
+  for ang in range(0,16):
     a = []
     for x in lines:
       if ang==angle(*x):

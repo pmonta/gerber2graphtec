@@ -4,8 +4,8 @@ import random
 import graphtec
 
 def pads1(g):
-  for i in xrange(0,20):
-    for j in xrange(0,20):
+  for i in range(0,20):
+    for j in range(0,20):
       g.path([(0,0),(0.05,0)])
       x = 0.05+0.016*i
       y = 0.05+0.016*j
