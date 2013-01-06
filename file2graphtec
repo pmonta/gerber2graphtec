@@ -23,7 +23,6 @@ ctx = usb1.USBContext()
 
 vendor_id = 0x0b4d
 product_id = 0x1121
-timeout = 10000
 endpoint = 1
 
 dev = ctx.openByVendorIDAndProductID(vendor_id, product_id)
@@ -34,6 +33,6 @@ while True:
   data = f.read(8)
   if not data:
     break
-  dev.bulkWrite(endpoint, data, timeout)
+  dev.bulkWrite(endpoint, data)
 
 f.close()
