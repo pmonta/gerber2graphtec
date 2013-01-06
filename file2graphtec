@@ -28,8 +28,6 @@ endpoint = 1
 
 dev = ctx.openByVendorIDAndProductID(vendor_id, product_id)
 
-print 'opened device: ',`dev`
-
 dev.claimInterface(0)
 
 while True:
