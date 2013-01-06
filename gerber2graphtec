@@ -77,8 +77,8 @@ if not input_filename:
 # convert file to pic format
 #
 
-temp_pdf = "/tmp/_gerber.pdf"
-temp_pic = "/tmp/_gerber.pic"
+temp_pdf = "_tmp_gerber.pdf"
+temp_pic = "_tmp_gerber.pic"
 
 os.system("gerbv --export=pdf --output=%s --border=0 %s" % (temp_pdf,input_filename))
 os.system("pstoedit -f pic %s %s 2>/dev/null" % (temp_pdf,temp_pic))
