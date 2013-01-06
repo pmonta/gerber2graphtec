@@ -13,6 +13,14 @@ A more elaborate command line with linear map (to correct spatial miscalibration
 
 You may want to have your CAM tool shrink the paste features by about 2 mils before exporting to gerber.  The craft-cutter knife, when cutting thin mylar, seems to spread out the geometry by about this amount.  I'd suggest using mylar with thickness between about 3 and 5 mils; the IPC-recommended thicknesses for fine-pitch stencils are approximately in this range.  (Typical inexpensive laser-transparency sheets happen to be just right, being somewhere between 3.5 and 4.3 mils.)
 
+With Mac OS X or Windows, the file2graphtec script can take the place of /dev/usb/lp0.  Write gerber2graphtec's output to a temporary file (gerber2graphtec ... >foo), then send it to the cutter (file2graphtec foo).  I've tested file2graphtec on Mac OS X but not on Windows.  For Mac OS X, install XCode and macports, then install the dependencies with
+
+port install gerbv
+port install pstoedit
+port install libusb
+
+These will take some time to build.
+
 
 Dependencies:
 
