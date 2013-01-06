@@ -1,0 +1,41 @@
+#!/usr/bin/python
+
+#
+# file2graphtec
+#
+# Send a file to a Graphtec vinyl cutter using libusb
+#
+# Copyright (c) 2013 Peter Monta <pmonta@gmail.com>
+#
+
+import sys
+import usb1
+
+if len(sys.argv)==2:
+  f = open(sys.argv[1], 'rb')
+elif len(sys.argv)==1:
+  f = sys.stdin
+else:
+  print 'usage: file2graphtec [filename]'
+  sys.exit(1)
+
+ctx = usb1.USBContext()
+
+vendor_id = 0x0b4d
+product_id = 0x1121
+timeout = 10000
+endpoint = 1
+
+dev = ctx.openByVendorIDAndProductID(vendor_id, product_id)
+
+print 'opened device: ',`dev`
+
+dev.claimInterface(0)
+
+while True:
+  data = f.read(8)
+  if not data:
+    break
+  dev.bulkWrite(endpoint, data, timeout)
+
+f.close()
