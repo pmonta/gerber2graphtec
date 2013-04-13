@@ -11,6 +11,26 @@
 import sys
 import usb1
 
+#
+# open a graphtec vinyl cutter from a list of recognized devices
+#
+
+device_list = [
+  (0x0b4d, 0x1121),     # Silhouette Cameo
+  (0x0b4d, 0x1123)      # Silhouette Portrait
+]
+
+def open_graphtec_device(ctx):
+  for (vendor_id,product_id) in device_list:
+    dev = ctx.openByVendorIDAndProductID(vendor_id, product_id)
+    if dev:
+      return dev
+  return None
+
+#
+# main program
+#
+
 if len(sys.argv)==2:
   f = open(sys.argv[1], 'rb')
 elif len(sys.argv)==1:
@@ -19,13 +39,14 @@ else:
   print 'usage: file2graphtec [filename]'
   sys.exit(1)
 
+endpoint = 1
 ctx = usb1.USBContext()
 
-vendor_id = 0x0b4d
-product_id = 0x1121
-endpoint = 1
+dev = open_graphtec_device(ctx)
 
-dev = ctx.openByVendorIDAndProductID(vendor_id, product_id)
+if not dev:
+  sys.stderr.write('no graphtec device found\n')
+  sys.exit(1)
 
 dev.claimInterface(0)
 

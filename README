@@ -1,4 +1,4 @@
-Tool for cutting accurate SMT stencils on a Graphtec cutter (e.g. Silhouette Cameo) from gerber files.  Techniques include separately drawn line segments (no complex paths), antibacklash, drag-knife-angle "training", and multiple passes.  This produces stencils usable down to approximately 0.5 mm pitch (QFP/QFN) and 0201 discrete components, or perhaps even slightly better; but it is slower than normal cutting.
+Tool for cutting accurate SMT stencils on a Graphtec cutter (e.g. Silhouette Cameo or Portrait) from gerber files.  Techniques include separately drawn line segments (no complex paths), antibacklash, drag-knife-angle "training", and multiple passes.  This produces stencils usable down to approximately 0.5 mm pitch (QFP/QFN) and 0201 discrete components, or perhaps even slightly better; but it is slower than normal cutting.
 
 
 Usage:
@@ -20,6 +20,16 @@ port install pstoedit
 port install libusb
 
 These will take some time to build.
+
+
+Links:
+
+These pages have hints on usage (e.g. on Windows), materials, performance, calibration, etc:
+
+http://pmonta.com/blog/2012/12/25/smt-stencil-cutting/
+http://dangerousprototypes.com/forum/viewtopic.php?f=68&t=5341
+http://hackeda.com/blog/start-printing-pcb-stencils-for-about-200/
+http://hackaday.com/2012/12/27/diy-smd-stencils-made-with-a-craft-cutter/
 
 
 Dependencies:

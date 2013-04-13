@@ -3,7 +3,7 @@
 #
 # gerber2graphtec
 #
-# Cut fine-pitch SMT stencils from a gerber file using a Graphtec craft/vinyl cutter (e.g. Silhouette Cameo)
+# Cut fine-pitch SMT stencils from a gerber file using a Graphtec craft/vinyl cutter (e.g. Silhouette Cameo or Portrait)
 #
 # Copyright (c) 2012 Peter Monta <pmonta@gmail.com>
 #
@@ -64,7 +64,7 @@ if not input_filename:
   print '  --cut_mode [0|1]    0 for highest accuracy (fine pitch), 1 for highest speed'
   print ''
   print 'defaults:'
-  print '  --offset 4.0,0.5  suitable for letter size (portrait), fed as "media" not "mat"'
+  print '  --offset 4.0,0.5  suitable for letter size (portrait) on the Cameo, fed as "media" not "mat"'
   print '  --border 1,1      1-inch border in x and y around gerber bounding box'
   print '  --matrix 1,0,0,1  identity linear transform for scale and skew calibration'
   print '  --speed 2,2       use two passes, speed 2 in each pass'
@@ -98,8 +98,6 @@ g.start()
 g.set(offset=(offset[0]+border[0]+0.5,offset[1]+border[1]+0.5), matrix=matrix)
 strokes = pic.read_pic(temp_pic)
 max_x,max_y = optimize.max_extent(strokes)
-
-tx,ty = 0.5,0.5
 
 border_path = [
   (-border[0], -border[1]),
