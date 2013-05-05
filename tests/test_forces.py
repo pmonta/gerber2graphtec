@@ -14,7 +14,7 @@ g.set(speed=2)
 
 for i in range(0,6):
   for j in range(0,5):
-    g.set(force=1+j+6*i)
+    g.set(force=1+j+5*i)
     tx = 0.5*j
     ty = 0.5*i
     g.closed_path([(tx,ty),(tx+0.3,ty),(tx+0.3,ty+0.3),(tx,ty+0.3)])
