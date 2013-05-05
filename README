@@ -21,6 +21,12 @@ port install libusb
 
 These will take some time to build.
 
+To run file2graphtec, you will also need the Python bindings for libusb-1.0.  Download and install this package:
+
+http://pypi.python.org/pypi/libusb1
+
+with the usual "python setup.py install" installation method (as the root user).  If you don't need file2graphtec (perhaps you're on Linux and can just use the device node directly), this Python package isn't needed.
+
 
 Links:
 
