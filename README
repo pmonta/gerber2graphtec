@@ -27,6 +27,12 @@ http://pypi.python.org/pypi/libusb1
 
 with the usual "python setup.py install" installation method (as the root user).  If you don't need file2graphtec (perhaps you're on Linux and can just use the device node directly), this Python package isn't needed.
 
+Ubuntu users may need to check their version of gerbv.  Several users have reported that versions prior to 2.6.0 (such as 2.5.0) apparently have a bug related to omitting small apertures/pads.  If your Linux distribution still has the old gerbv-2.5.0, please delete the package and instead build from source for the latest stable version:
+
+http://gerbv.geda-project.org/
+
+Fedora 17 has gerbv-2.6.0 in its supplied package list, so no issue there.
+
 
 Links:
 
@@ -40,7 +46,7 @@ http://hackaday.com/2012/12/27/diy-smd-stencils-made-with-a-craft-cutter/
 
 Dependencies:
 
-gerbv
+gerbv (>= 2.6.0)
 pstoedit
 
 
