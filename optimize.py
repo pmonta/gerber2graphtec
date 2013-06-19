@@ -80,13 +80,15 @@ def optimize(strokes, b):
       continue
     a.sort(key=lambda s:(s[1],s[0]))
     emit_training_line(ang)
-    while a:
-      while True:
-        i = find_next(a)
-        if i==None:
-          break
-        emit_line(*a[i])
-        del a[i]
-      emit_training_line(ang)
+#    while a:
+#      while True:
+#        i = find_next(a)
+#        if i==None:
+#          break
+#        emit_line(*a[i])
+#        del a[i]
+#      emit_training_line(ang)
+    for x in a:
+      emit_line(*x)
 
   return r

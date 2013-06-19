@@ -44,11 +44,16 @@ http://hackeda.com/blog/start-printing-pcb-stencils-for-about-200/
 http://hackaday.com/2012/12/27/diy-smd-stencils-made-with-a-craft-cutter/
 
 
+GUI:
+
+An optional GUI has been provided by jesuscf (see the dangerousprototypes.com thread linked above).  It allows interactive selection of the input Gerber file, parameters, and cutting operations.  To use it, run the file g2g_gui.py.
+
+
 Dependencies:
 
 gerbv (>= 2.6.0)
 pstoedit
-
+Tkinter (when using g2g_gui)
 
 Credits:
 
