@@ -23,7 +23,6 @@ speed = [2,2]
 force = [8,30]
 cut_mode = 0
 input_filename = ''
-noborder = 0
 media_size = (12,11)
 
 def floats(s):
@@ -36,7 +35,6 @@ while argc<len(sys.argv):
     offset = floats(sys.argv[argc+1])
     argc = argc + 2
   elif x=='--border':
-    noborder = 0
     border = floats(sys.argv[argc+1])
     argc = argc + 2
   elif x=='--matrix':
@@ -51,10 +49,6 @@ while argc<len(sys.argv):
   elif x=='--cut_mode':
     cut_mode = int(sys.argv[argc+1])
     argc = argc + 2
-  elif x=='--noborder':
-    noborder = 1
-    border = (0,0)
-    argc = argc + 1
   elif x=='--media_size':
     media_size = floats(sys.argv[argc+1])
     argc = argc + 2
@@ -67,8 +61,7 @@ if not input_filename:
   print ''
   print 'options:'
   print '  --offset x,y        translate to device coordinates x,y (inches)'
-  print '  --border bx,by      leave a border around the bounding box of the gerber file'
-  print '  --noborder          disable border'
+  print '  --border bx,by      cut a border around the bounding box of the gerber file; 0,0 to disable'
   print '  --matrix a,b,c,d    transform coordinates by [a b;c d]'
   print '  --speed s[,s2[,s3]] use speed s in device units; s2,s3 for multiple passes'
   print '  --force f[,f2[,f3]] use force f in device units; f2,f3 for multiple passes'
@@ -131,14 +124,14 @@ if cut_mode==0:
     g.set(speed=s, force=f)
     for x in lines:
       g.line(*x)
-    if not noborder:
+    if border!=(0,0):
       g.closed_path(border_path)
 else:
   for (s,f) in zip(speed,force):
     g.set(speed=s, force=f)
     for s in strokes:
       g.closed_path(s)
-    if not noborder:
+    if border!=(0,0):
       g.closed_path(border_path)
 
 g.end()

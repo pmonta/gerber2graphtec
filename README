@@ -31,7 +31,7 @@ Ubuntu users may need to check their version of gerbv.  Several users have repor
 
 http://gerbv.geda-project.org/
 
-Fedora 17 has gerbv-2.6.0 in its supplied package list, so no issue there.
+Fedora 17 has gerbv-2.6.0 in its supplied package list, so no issue there.  For Fedora-like systems, "yum install gerbv pstoedit tkinter".
 
 
 Links:
