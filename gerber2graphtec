@@ -109,10 +109,12 @@ import optimize
 
 g = graphtec.graphtec()
 
+g.set(media_size=media_size)
+g.set(offset=(offset[0]+border[0]+0.5,offset[1]+border[1]+0.5))
+g.set(matrix=matrix)
+
 g.start()
 
-g.set(media_size=media_size)
-g.set(offset=(offset[0]+border[0]+0.5,offset[1]+border[1]+0.5), matrix=matrix)
 strokes = pic.read_pic(temp_pic)
 max_x,max_y = optimize.max_extent(strokes)
 
