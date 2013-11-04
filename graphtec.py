@@ -1,5 +1,5 @@
 #
-# communicate with a graphtec printer (Silhouette Cameo)
+# communicate with a graphtec printer (Silhouette Cameo or Portrait)
 #
 
 import sys
@@ -11,6 +11,7 @@ class graphtec:
     self.scale = 2.54*200
     self.offset = (4.0,0.5)
     self.matrix = (1,0,0,1)
+    self.media_size = (12,11)   # default of 12x11 inches
 
   def emit(self, s):
     self.fd.write(s)
@@ -19,8 +20,8 @@ class graphtec:
     papertype = "100"
     trackenhancing = "0"
     orientation = "1"
-#    page = ["12x12 cutting mat", 6096, 6096]     # 12x12 cutting mat in device units
-    page = ["12x11 media", 6096, 5588]            # 12x11 media in device units
+    inches_to_device = 508      # device units: 1/20 mm
+    page = ["media_size", int(inches_to_device*media_size[0]), int(inches_to_device*media_size[1])]
     margintop = 500                           # margins in device units
     marginright = 320
     self.emit("\x1b\x04")  # initialize plotte
@@ -106,3 +107,5 @@ class graphtec:
         self.offset = kwargs[k]
       elif k=='matrix':
         self.matrix = kwargs[k]
+      elif k=='media_size':
+        self.media_size = kwargs[k]

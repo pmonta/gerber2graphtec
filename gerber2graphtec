@@ -23,6 +23,8 @@ speed = [2,2]
 force = [8,30]
 cut_mode = 0
 input_filename = ''
+noborder = 0
+media_size = (12,11)
 
 def floats(s):
   return map(float,string.split(s,','))
@@ -34,6 +36,7 @@ while argc<len(sys.argv):
     offset = floats(sys.argv[argc+1])
     argc = argc + 2
   elif x=='--border':
+    noborder = 0
     border = floats(sys.argv[argc+1])
     argc = argc + 2
   elif x=='--matrix':
@@ -48,6 +51,13 @@ while argc<len(sys.argv):
   elif x=='--cut_mode':
     cut_mode = int(sys.argv[argc+1])
     argc = argc + 2
+  elif x=='--noborder':
+    noborder = 1
+    border = (0,0)
+    argc = argc + 1
+  elif x=='--media_size':
+    media_size = floats(sys.argv[argc+1])
+    argc = argc + 2
   else:
     input_filename = sys.argv[argc]
     argc = argc + 1
@@ -58,18 +68,21 @@ if not input_filename:
   print 'options:'
   print '  --offset x,y        translate to device coordinates x,y (inches)'
   print '  --border bx,by      leave a border around the bounding box of the gerber file'
+  print '  --noborder          disable border'
   print '  --matrix a,b,c,d    transform coordinates by [a b;c d]'
   print '  --speed s[,s2[,s3]] use speed s in device units; s2,s3 for multiple passes'
   print '  --force f[,f2[,f3]] use force f in device units; f2,f3 for multiple passes'
   print '  --cut_mode [0|1]    0 for highest accuracy (fine pitch), 1 for highest speed'
+  print '  --media_size x,y    size of media'
   print ''
   print 'defaults:'
-  print '  --offset 4.0,0.5  suitable for letter size (portrait) on the Cameo, fed as "media" not "mat"'
-  print '  --border 1,1      1-inch border in x and y around gerber bounding box'
-  print '  --matrix 1,0,0,1  identity linear transform for scale and skew calibration'
-  print '  --speed 2,2       use two passes, speed 2 in each pass'
-  print '  --force 8,30      use force 8 for first pass, force 30 for second pass'
-  print '  --cut_mode 0      highest accuracy'
+  print '  --offset 4.0,0.5    suitable for letter size (portrait) on the Cameo, fed as "media" not "mat"'
+  print '  --border 1,1        1-inch border in x and y around gerber bounding box'
+  print '  --matrix 1,0,0,1    identity linear transform for scale and skew calibration'
+  print '  --speed 2,2         use two passes, speed 2 in each pass'
+  print '  --force 8,30        use force 8 for first pass, force 30 for second pass'
+  print '  --cut_mode 0        highest accuracy'
+  print '  --media_size 12,11  use a media size of 12 inches in x, 11 inches in y'
   print ''
   sys.exit(1)
 
@@ -98,6 +111,7 @@ g = graphtec.graphtec()
 
 g.start()
 
+g.set(media_size=media_size)
 g.set(offset=(offset[0]+border[0]+0.5,offset[1]+border[1]+0.5), matrix=matrix)
 strokes = pic.read_pic(temp_pic)
 max_x,max_y = optimize.max_extent(strokes)
@@ -115,12 +129,14 @@ if cut_mode==0:
     g.set(speed=s, force=f)
     for x in lines:
       g.line(*x)
-    g.closed_path(border_path)
+    if not noborder:
+      g.closed_path(border_path)
 else:
   for (s,f) in zip(speed,force):
     g.set(speed=s, force=f)
     for s in strokes:
       g.closed_path(s)
-    g.closed_path(border_path)
+    if not noborder:
+      g.closed_path(border_path)
 
 g.end()
