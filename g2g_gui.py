@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import Tkinter
 import tkMessageBox
 import tkFileDialog
