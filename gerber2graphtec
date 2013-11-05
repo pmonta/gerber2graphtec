@@ -124,14 +124,14 @@ if cut_mode==0:
     g.set(speed=s, force=f)
     for x in lines:
       g.line(*x)
-    if border!=(0,0):
+    if border[0]!=0 or border[1]!=0:
       g.closed_path(border_path)
 else:
   for (s,f) in zip(speed,force):
     g.set(speed=s, force=f)
     for s in strokes:
       g.closed_path(s)
-    if border!=(0,0):
+    if border[0]!=0 or border[1]!=0:
       g.closed_path(border_path)
 
 g.end()
