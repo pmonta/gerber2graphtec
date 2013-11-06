@@ -2,6 +2,25 @@
 
 import math
 
+# find bounding box, then offset the geometry to make all coordinates positive
+
+def justify(strokes):
+  min_x,min_y = 1e6,1e6
+  max_x,max_y = -1e6,-1e6
+  for s in strokes:
+    for (a,b) in s:
+      max_x = max([max_x,a])
+      max_y = max([max_y,b])
+      min_x = min([min_x,a])
+      min_y = min([min_y,b])
+  r = []
+  for s in strokes:
+    t = []
+    for (a,b) in s:
+      t.append((a-min_x,b-min_y))
+    r.append(t)
+  return r
+
 def max_extent(strokes):
   max_x,max_y = 0,0
   for s in strokes:

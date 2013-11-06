@@ -89,7 +89,7 @@ temp_pic = "_tmp_gerber.pic"
 if string.lower(input_filename[-3:])=='pdf':
   os.system("pstoedit -f pic %s %s 2>/dev/null" % (input_filename,temp_pic))
 else:
-  os.system("gerbv --export=pdf --output=%s --border=0 %s" % (temp_pdf,input_filename))
+  os.system("gerbv --export=pdf --output=%s --border=20 %s" % (temp_pdf,input_filename))
   os.system("pstoedit -f pic %s %s 2>/dev/null" % (temp_pdf,temp_pic))
 
 #
@@ -109,6 +109,7 @@ g.set(matrix=matrix)
 g.start()
 
 strokes = pic.read_pic(temp_pic)
+strokes = optimize.justify(strokes)
 max_x,max_y = optimize.max_extent(strokes)
 
 border_path = [
