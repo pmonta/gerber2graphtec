@@ -35,7 +35,7 @@ Fedora 17 has gerbv-2.6.0 in its supplied package list, so no issue there.  For 
 
 On some Linux distributions, permissions on /dev/usb/lp0 are restricted by default.  To fix this, add yourself to the lp group and then log out and log back in:
 
-su usermod -a --group lp your_userid
+sudo usermod -a --group lp your_userid
 
 
 Links:
