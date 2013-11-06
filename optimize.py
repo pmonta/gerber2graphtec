@@ -2,6 +2,20 @@
 
 import math
 
+# rotate all geometry counterclockwise by theta degrees
+
+def rotate(strokes, theta):
+  ang = theta*(math.pi/180)
+  r = []
+  for s in strokes:
+    t = []
+    for (a,b) in s:
+      c = a*math.cos(ang) - b*math.sin(ang)
+      d = a*math.sin(ang) + b*math.cos(ang)
+      t.append((c,d))
+    r.append(t)
+  return r
+
 # find bounding box, then offset the geometry to make all coordinates positive
 
 def justify(strokes):

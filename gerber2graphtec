@@ -24,6 +24,7 @@ force = [8,30]
 cut_mode = 0
 input_filename = ''
 media_size = (12,11)
+theta = 0
 
 def floats(s):
   return map(float,string.split(s,','))
@@ -52,6 +53,9 @@ while argc<len(sys.argv):
   elif x=='--media_size':
     media_size = floats(sys.argv[argc+1])
     argc = argc + 2
+  elif x=='--rotate':
+    theta = float(sys.argv[argc+1])
+    argc = argc + 1
   else:
     input_filename = sys.argv[argc]
     argc = argc + 1
@@ -67,6 +71,7 @@ if not input_filename:
   print '  --force f[,f2[,f3]] use force f in device units; f2,f3 for multiple passes'
   print '  --cut_mode [0|1]    0 for highest accuracy (fine pitch), 1 for highest speed'
   print '  --media_size x,y    size of media'
+  print '  --rotate theta      rotate counterclockwise by theta degrees'
   print ''
   print 'defaults:'
   print '  --offset 4.0,0.5    suitable for letter size (portrait) on the Cameo, fed as "media" not "mat"'
@@ -76,6 +81,7 @@ if not input_filename:
   print '  --force 8,30        use force 8 for first pass, force 30 for second pass'
   print '  --cut_mode 0        highest accuracy'
   print '  --media_size 12,11  use a media size of 12 inches in x, 11 inches in y'
+  print '  --rotate 0          no rotation'
   print ''
   sys.exit(1)
 
@@ -109,6 +115,7 @@ g.set(matrix=matrix)
 g.start()
 
 strokes = pic.read_pic(temp_pic)
+strokes = optimize.rotate(strokes, theta)
 strokes = optimize.justify(strokes)
 max_x,max_y = optimize.max_extent(strokes)
 
