@@ -20,8 +20,7 @@ class graphtec:
     papertype = "100"
     trackenhancing = "0"
     orientation = "1"
-    inches_to_device = 508      # device units: 1/20 mm
-    page = ["media_size", int(inches_to_device*self.media_size[0]), int(inches_to_device*self.media_size[1])]
+    page = ["media_size", int(self.scale*self.media_size[0]), int(self.scale*self.media_size[1])]
     margintop = 500                           # margins in device units
     marginright = 320
     self.emit("\x1b\x04")  # initialize plotte
